@@ -28,7 +28,7 @@ body { background:var(--cream); color:var(--brown-deep); font-family:'Cormorant 
   width:100%; background:#1A0F05; padding:16px 24px;
   text-align:center; letter-spacing:.35em;
   font-family:'Cinzel',serif; font-size:clamp(12px,1.8vw,16px);
-  color:var(--gold);
+  color:#FDF5EA;
 }
 
 /* ── NAV ── */
@@ -100,9 +100,9 @@ nav.main-nav {
   display:flex; flex-direction:column; padding:16px 0;
 }
 .drawer-nav a {
-  font-family:'Cinzel',serif; font-size:13px; letter-spacing:.25em;
+  font-family:'Cinzel',serif; font-size:16px; letter-spacing:.2em;
   color:var(--brown); text-decoration:none; text-transform:uppercase;
-  padding:18px 28px;
+  padding:20px 28px;
   border-bottom:1px solid rgba(201,151,58,.1);
   transition:color .2s, background .2s;
 }
@@ -321,7 +321,7 @@ footer {
 }
 .panel-empty {
   text-align:center; padding:48px 0;
-  font-size:17px; font-style:italic; color:var(--brown-mid);
+  font-size:22px; font-style:italic; color:var(--brown-mid);
 }
 
 /* Panel item */
@@ -375,7 +375,7 @@ footer {
 }
 
 /* Panel footer */
-.panel-footer { padding:20px 24px; border-top:1px solid rgba(201,151,58,.2); }
+.panel-footer { padding:20px 24px; border-top:1px solid rgba(201,151,58,.2); flex-shrink:0; }
 .btn-buy {
   display:block; width:100%; padding:16px;
   background:var(--brown-deep); color:#FDF5EA;
@@ -846,6 +846,23 @@ document.querySelectorAll('.category-nav a').forEach(link => {
 
 // Jump instantly to hash on page load, then fade in
 window.addEventListener('load', () => {
+  // Restore basket and favourites from localStorage
+  renderBasket();
+  renderFav();
+
+  // Restore heart icon states
+  document.querySelectorAll('.product-card').forEach(card => {
+    const name = card.querySelector('.product-card-name').textContent;
+    const isFav = favourites.some(f => f.name === name);
+    if (isFav) {
+      const svg = card.querySelector('.heart-btn svg');
+      if (svg) {
+        svg.setAttribute('fill', '#e74c3c');
+        svg.setAttribute('stroke', '#e74c3c');
+      }
+    }
+  });
+
   if (window.location.hash) {
     const target = document.querySelector(window.location.hash);
     if (target) {
@@ -933,8 +950,13 @@ window.addEventListener('scroll', () => {
 
 <script>
 // ── STATE ──
-let basket = [];
-let favourites = [];
+let basket = JSON.parse(localStorage.getItem('gc_basket') || '[]');
+let favourites = JSON.parse(localStorage.getItem('gc_favourites') || '[]');
+
+function saveState() {
+  localStorage.setItem('gc_basket', JSON.stringify(basket));
+  localStorage.setItem('gc_favourites', JSON.stringify(favourites));
+}
 
 // ── QUANTITY BUTTONS ──
 document.querySelectorAll('.qty-btn').forEach(btn => {
@@ -968,6 +990,7 @@ document.querySelectorAll('.heart-btn').forEach(btn => {
     }
     updateFavCount();
     renderFav();
+    saveState();
   });
 });
 
@@ -987,6 +1010,7 @@ document.querySelectorAll('.btn-basket').forEach(btn => {
     card.querySelector('.qty-count').textContent = '1';
     updateBasketCount();
     renderBasket();
+  saveState();
 
     // Brief button feedback
     btn.textContent = '✓ Added';
@@ -1048,6 +1072,7 @@ function renderBasket() {
       </div>
       <button class="panel-item-remove" onclick="removeBasket('${b.name}')">×</button>
     </div>`).join('');
+  updateBasketCount();
 }
 
 // ── REMOVE ──
@@ -1063,12 +1088,14 @@ function removeFav(name) {
   });
   updateFavCount();
   renderFav();
+    saveState();
 }
 
 function removeBasket(name) {
   basket = basket.filter(b => b.name !== name);
   updateBasketCount();
   renderBasket();
+  saveState();
 }
 
 function changePanelQty(name, delta) {
@@ -1080,6 +1107,7 @@ function changePanelQty(name, delta) {
   }
   updateBasketCount();
   renderBasket();
+  saveState();
 }
 
 // ── OPEN / CLOSE ──
@@ -1087,12 +1115,14 @@ function openFav() {
   document.getElementById('fav-panel').classList.add('open');
   document.getElementById('overlay').classList.add('open');
   renderFav();
+    saveState();
 }
 
 function openBasket() {
   document.getElementById('basket-panel').classList.add('open');
   document.getElementById('overlay').classList.add('open');
   renderBasket();
+  saveState();
 }
 
 function closePanels() {
@@ -1110,12 +1140,14 @@ function showPurchaseMsg() {
   closePanels();
   document.getElementById('purchase-msg').classList.add('open');
   basket = [];
+  saveState();
   updateBasketCount();
 }
 
 function closePurchaseMsg() {
   document.getElementById('purchase-msg').classList.remove('open');
   renderBasket();
+  saveState();
 }
 
 function closeEmptyMsg() {

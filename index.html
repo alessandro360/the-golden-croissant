@@ -27,7 +27,7 @@ body { background:var(--cream); color:var(--brown-deep); font-family:'Cormorant 
   width:100%; background:#1A0F05; padding:16px 24px;
   text-align:center; letter-spacing:.35em;
   font-family:'Cinzel',serif; font-size:clamp(12px,1.8vw,16px);
-  color:var(--gold);
+  color:#FDF5EA;
 }
 
 /* ── NAV ── */
@@ -101,9 +101,9 @@ nav {
   display:flex; flex-direction:column; padding:16px 0;
 }
 .drawer-nav a {
-  font-family:'Cinzel',serif; font-size:13px; letter-spacing:.25em;
+  font-family:'Cinzel',serif; font-size:16px; letter-spacing:.2em;
   color:var(--brown); text-decoration:none; text-transform:uppercase;
-  padding:18px 28px;
+  padding:20px 28px;
   border-bottom:1px solid rgba(201,151,58,.1);
   transition:color .2s, background .2s;
 }
@@ -422,9 +422,29 @@ footer {
     <a href="about.html">About</a>
   </div>
   <div class="nav-cart">
-    <img src="assets/golden-croissant-v42-home-img1.png" alt="Shopping trolley" style="width:56px;height:56px;object-fit:contain;background:rgba(250,240,229,0.97);border-radius:50%;display:block;">
+    <div onclick="openBasketPopup()" style="position:relative;cursor:pointer;width:56px;height:56px;">
+      <img src="assets/golden-croissant-v42-home-img1.png" alt="Shopping trolley" style="width:56px;height:56px;object-fit:contain;background:rgba(250,240,229,0.97);border-radius:50%;display:block;">
+      <span id="home-basket-count" style="display:none;position:absolute;top:-6px;right:-6px;background:#C9973A;color:#fff;border-radius:50%;width:22px;height:22px;font-size:12px;font-family:'Cinzel',serif;font-weight:600;line-height:22px;text-align:center;box-shadow:0 2px 6px rgba(30,18,8,0.25);">0</span>
+    </div>
   </div>
 </nav>
+
+<!-- BASKET POPUP -->
+<div class="svc-overlay" id="popupBasket">
+  <div class="svc-popup">
+    <button class="svc-popup-close" onclick="closePopup('popupBasket')">&#215;</button>
+    <div class="svc-popup-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/>
+      </svg>
+    </div>
+    <h3>Your Basket</h3>
+    <div class="svc-popup-line"></div>
+    <div id="home-basket-items" style="text-align:left;margin-bottom:16px;"></div>
+    <a href="shop.html" style="display:block;width:100%;padding:14px;background:var(--brown-deep);color:#FDF5EA;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.25em;text-transform:uppercase;border:none;border-radius:40px;cursor:pointer;text-decoration:none;text-align:center;transition:background .2s;" onmouseover="this.style.background='#C9973A'" onmouseout="this.style.background='#1E1208'">Go to Shop</a>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -589,11 +609,43 @@ function closePopup(id) {
     document.body.style.overflow = '';
   }, 250);
 }
-// Close popup on overlay click
 document.querySelectorAll('.svc-overlay').forEach(overlay => {
   overlay.addEventListener('click', function(e) {
     if (e.target === this) closePopup(this.id);
   });
+});
+
+// ── BASKET FROM LOCALSTORAGE ──
+function openBasketPopup() {
+  const basket = JSON.parse(localStorage.getItem('gc_basket') || '[]');
+  const countEl = document.getElementById('home-basket-count');
+  const itemsEl = document.getElementById('home-basket-items');
+
+  if (basket.length === 0) {
+    itemsEl.innerHTML = '<p style="text-align:center;font-style:italic;color:#5C3D2A;font-family:\'Cormorant Garamond\',serif;font-size:22px;padding:12px 0;">Your basket is empty.</p>';
+  } else {
+    itemsEl.innerHTML = basket.map(item => `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(201,151,58,.12);">
+        <img src="${item.img}" style="width:52px;height:52px;border-radius:10px;object-fit:cover;">
+        <div style="flex:1;">
+          <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;color:#1E1208;text-transform:uppercase;">${item.name}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:#5C3D2A;margin-top:2px;">Qty: ${item.qty}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  openPopup('popupBasket');
+}
+
+// ── UPDATE BASKET COUNT ON LOAD ──
+window.addEventListener('load', () => {
+  const basket = JSON.parse(localStorage.getItem('gc_basket') || '[]');
+  const total = basket.reduce((sum, item) => sum + (item.qty || 1), 0);
+  const countEl = document.getElementById('home-basket-count');
+  if (total > 0) {
+    countEl.textContent = total;
+    countEl.style.display = 'block';
+  }
 });
 </script>
 </body>
