@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Golden Croissant — Le Croissant Doré</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Great+Vibes&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FDF5EA;
+  --cream-dark: #EDE7DC;
+  --brown-deep: #1E1208;
+  --brown: #3D2B1F;
+  --brown-mid: #5C3D2A;
+  --gold: #C9973A;
+  --gold-pale: #F5E4BE;
+  --shadow: 0 4px 24px rgba(61,43,31,0.10);
+  --shadow-lg: 0 8px 40px rgba(61,43,31,0.14);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--cream); color:var(--brown-deep); font-family:'Cormorant Garamond',Georgia,serif; overflow-x:hidden; }
+
+/* ── HEADER BANNER ── */
+.header-banner {
+  width:100%; background:#1A0F05; padding:16px 24px;
+  text-align:center; letter-spacing:.35em;
+  font-family:'Cinzel',serif; font-size:clamp(12px,1.8vw,16px);
+  color:var(--gold);
+}
+
+/* ── NAV ── */
+nav {
+  background:rgba(250,240,229,0.97);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px;
+  height:72px;
+  border-bottom:1px solid rgba(201,151,58,.18);
+  position:sticky; top:0; z-index:100;
+  backdrop-filter:blur(8px);
+}
+.nav-hamburger { display:flex; flex-direction:column; gap:5px; cursor:pointer; visibility:hidden; width:64px; }
+.nav-hamburger span { display:block; width:24px; height:1.5px; background:var(--brown); transition:all .3s; }
+.nav-center {
+  font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600;
+  letter-spacing:.35em; color:var(--brown);
+  text-transform:uppercase; cursor:pointer; transition:color .2s;
+  flex:1; text-align:center;
+}
+.nav-center:hover { color:var(--gold); }
+.nav-cart { cursor:pointer; width:64px; display:flex; justify-content:flex-end; align-items:center; }
+.nav-cart svg { stroke:var(--brown); display:block; }
+
+/* ── DESKTOP NAV LINKS ── */
+.nav-links {
+  display:flex; align-items:center; gap:36px;
+  flex:1; justify-content:center;
+}
+.nav-links a {
+  font-family:'Cinzel',serif; font-size:12px; letter-spacing:.25em;
+  color:var(--brown); text-decoration:none; text-transform:uppercase;
+  transition:color .2s; padding-bottom:2px;
+  border-bottom:1px solid transparent;
+}
+.nav-links a:hover { color:var(--gold); border-bottom-color:var(--gold); }
+.nav-links a.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* ── MOBILE DRAWER ── */
+.drawer-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(30,18,8,0.35); z-index:200;
+}
+.drawer-overlay.open { display:block; }
+.drawer {
+  position:fixed; top:0; left:0; height:100%; width:260px;
+  background:#FAF0E5;
+  box-shadow:4px 0 32px rgba(30,18,8,0.18);
+  z-index:201;
+  transform:translateX(-100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+  padding:0;
+}
+.drawer.open { transform:translateX(0); }
+.drawer-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:24px 24px 20px;
+  border-bottom:1px solid rgba(201,151,58,.2);
+}
+.drawer-title {
+  font-family:'Cinzel',serif; font-size:11px; letter-spacing:.3em;
+  color:var(--gold); text-transform:uppercase;
+}
+.drawer-close {
+  cursor:pointer; background:none; border:none; padding:4px;
+  color:var(--brown); font-size:20px; line-height:1;
+}
+.drawer-close:hover { color:var(--gold); }
+.drawer-nav {
+  display:flex; flex-direction:column; padding:16px 0;
+}
+.drawer-nav a {
+  font-family:'Cinzel',serif; font-size:13px; letter-spacing:.25em;
+  color:var(--brown); text-decoration:none; text-transform:uppercase;
+  padding:18px 28px;
+  border-bottom:1px solid rgba(201,151,58,.1);
+  transition:color .2s, background .2s;
+}
+.drawer-nav a:hover { color:var(--gold); background:rgba(201,151,58,.05); }
+.drawer-nav a.active { color:var(--gold); }
+
+/* ── HERO ── */
+.hero {
+  background:#FAF0E5;
+  text-align:center;
+  padding:0;
+  overflow:hidden;
+}
+.hero-title-img {
+  display:block;
+  width:100%;
+  max-width:100%;
+  object-fit:cover;
+  min-height:200px;
+}
+.hero-img-wrap {
+  display:flex;
+  justify-content:center;
+  padding:0 16px 0;
+}
+.hero-img-wrap img {
+  width:min(860px, 96vw);
+  object-fit:cover;
+  border-radius:24px;
+  box-shadow:0 16px 60px rgba(61,43,31,0.18);
+  display:block;
+}
+
+/* ── SERVICE SECTION ── */
+.service-section {
+  padding:32px 20px 48px;
+  background:#FAF0E5;
+}
+.service-cards {
+  display:flex;
+  gap:120px;
+  max-width:860px;
+  margin:0 auto;
+  justify-content:center;
+}
+.service-card {
+  flex:0 0 220px;
+  width:220px;
+  max-width:220px;
+  cursor:pointer;
+  transition:transform .3s;
+}
+.service-card:hover { transform:translateY(-4px); }
+.service-card img {
+  width:100%;
+  display:block;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(61,43,31,0.08);
+}
+
+/* ── ORNAMENT ── */
+.sec-orn { display:flex; align-items:center; justify-content:center; gap:12px; }
+.sec-orn-line { width:60px; height:1px; background:var(--gold); opacity:.6; }
+
+/* ── SECTION HEADING ── */
+.sec-head { text-align:center; margin-bottom:56px; padding:0 16px; }
+.sec-head h2 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(30px,5vw,54px);
+  font-weight:400; color:var(--brown-deep);
+  letter-spacing:.04em; line-height:1.1;
+  margin:12px 0;
+}
+
+/* ── CATEGORY ── */
+.cat-section { padding:56px 24px; background:var(--cream-dark); }
+.cat-grid { display:flex; gap:24px; max-width:1100px; margin:0 auto; flex-wrap:wrap; justify-content:center; }
+.cat-card {
+  flex:1; min-width:280px; max-width:340px;
+  background:var(--cream); border-radius:16px; overflow:hidden;
+  box-shadow:var(--shadow); border:1px solid rgba(201,151,58,.10);
+  display:flex; flex-direction:column; transition:transform .3s,box-shadow .3s; cursor:pointer;
+}
+.cat-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+.cat-img { width:100%; height:220px; overflow:hidden; }
+.cat-img img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.cat-card:hover .cat-img img { transform:scale(1.05); }
+.cat-body { padding:20px 24px 20px; }
+.cat-icon { margin-bottom:12px; color:var(--gold); }
+.cat-body h3 { font-family:'Playfair Display',serif; font-size:18px; font-weight:500; letter-spacing:.02em; color:var(--brown-deep); margin:0; padding:0; display:inline; }
+.cat-body p { font-size:15px; color:var(--brown-mid); font-style:italic; line-height:1.5; flex:1; margin-bottom:20px; }
+.cat-arrow { display:flex; align-items:center; gap:8px; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.2em; color:var(--gold); }
+.cat-arrow svg { stroke:var(--gold); }
+
+/* ── PACKAGING ── */
+.pkg-section { padding:56px 24px 64px; background:#FAF0E5; }
+
+/* Icon cards row */
+.pkg-features {
+  display:flex;
+  gap:120px;
+  max-width:860px;
+  margin:48px auto 0;
+  justify-content:center;
+}
+.pkg-feat {
+  flex:0 0 220px;
+  width:220px;
+  max-width:220px;
+  cursor:default;
+}
+.pkg-feat img {
+  width:100%;
+  display:block;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(61,43,31,0.08);
+}
+
+/* Bag & box images */
+.pkg-images {
+  max-width:900px; margin:0 auto;
+  display:flex; gap:32px; align-items:center;
+  justify-content:center; flex-wrap:wrap;
+}
+.pkg-img { flex:1; min-width:260px; max-width:420px; text-align:center; }
+.pkg-img img {
+  width:100%; object-fit:contain;
+  filter:drop-shadow(0 8px 32px rgba(61,43,31,.15));
+  transition:transform .4s;
+}
+.pkg-img img:hover { transform:scale(1.03) rotate(-1deg); }
+.pkg-hero-wrap {
+  display:flex;
+  justify-content:center;
+  padding:0 16px;
+}
+.pkg-hero-wrap img {
+  width:min(860px, 96vw);
+  object-fit:cover;
+  border-radius:24px;
+  box-shadow:0 16px 60px rgba(61,43,31,0.18);
+  display:block;
+}
+
+/* ── ABOUT ── */
+.about-section { padding:40px 24px 80px; background:var(--cream-dark); text-align:center; }
+.about-inner { max-width:680px; margin:0 auto; }
+.about-inner p { font-size:clamp(19px,2.4vw,24px); line-height:1.8; color:var(--brown-mid); font-style:normal; font-weight:400; }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--brown-deep);
+  padding:40px 24px 28px;
+  text-align:center;
+}
+.foot-inner {
+  max-width:900px;
+  margin:0 auto;
+}
+.foot-orn {
+  display:flex; align-items:center; justify-content:center; gap:20px;
+  margin-bottom:20px;
+}
+.foot-line { width:80px; height:1px; background:var(--gold); opacity:1; }
+.foot-name {
+  font-family:'Cinzel',serif;
+  font-size:13px; letter-spacing:.35em;
+  color:#FDF5EA;
+  text-transform:uppercase;
+}
+.foot-copy {
+  margin-top:16px;
+  font-family:'Cinzel',serif;
+  font-size:10px; letter-spacing:.2em;
+  color:#FDF5EA;
+}
+
+/* ── RESPONSIVE ── */
+
+@media(max-width:900px) {
+  .service-card { flex:0 0 180px; width:180px; max-width:180px; }
+  .pkg-feat { flex:0 0 180px; width:180px; max-width:180px; }
+}
+
+@media(max-width:640px) {
+  .nav-hamburger { visibility:visible; }
+  .nav-links { display:none; }
+  .service-section { padding:32px 16px; }
+  .pkg-section { padding:40px 16px; }
+  .cat-section { padding:40px 16px; }
+  .about-section { padding:40px 16px; }
+  .sec-head { margin-bottom:36px; padding:0 8px; }
+  .service-cards { gap:10px; }
+  .service-card { flex:0 0 calc(50% - 5px); max-width:180px; }
+  .pkg-features { gap:10px; margin-bottom:32px; }
+  .pkg-feat { flex:0 0 calc(50% - 5px); max-width:180px; }
+  .pkg-images { gap:16px; }
+  .hero-img-wrap img { border-radius:16px; }
+}
+
+/* ── SERVICE POPUPS ── */
+.svc-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(30,18,8,0.45); z-index:300;
+  align-items:center; justify-content:center;
+  opacity:0; transition:opacity 0.25s ease;
+}
+.svc-overlay.open { display:flex; }
+.svc-overlay.visible { opacity:1; }
+.svc-popup {
+  background:var(--cream);
+  border-radius:20px;
+  padding:40px 36px 32px;
+  max-width:360px; width:90%;
+  box-shadow:0 16px 60px rgba(30,18,8,0.22);
+  position:relative;
+  text-align:center;
+  border:1px solid rgba(201,151,58,.2);
+  transform:translateY(12px); transition:transform 0.25s ease;
+}
+.svc-overlay.visible .svc-popup { transform:translateY(0); }
+.svc-popup-close {
+  position:absolute; top:14px; right:18px;
+  background:none; border:none; cursor:pointer;
+  font-size:22px; color:var(--brown-mid); line-height:1;
+}
+.svc-popup-close:hover { color:var(--gold); }
+.svc-popup-icon {
+  width:64px; height:64px;
+  background:var(--gold-pale);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 20px;
+}
+.svc-popup-icon svg { stroke:var(--gold); }
+.svc-popup h3 {
+  font-family:'Cinzel',serif;
+  font-size:16px; letter-spacing:.25em;
+  color:var(--brown-deep); text-transform:uppercase;
+  margin-bottom:10px;
+}
+.svc-popup-line {
+  width:40px; height:1px; background:var(--gold);
+  margin:0 auto 16px;
+}
+.svc-popup p {
+  font-family:'Cinzel',serif;
+  font-size:14px; letter-spacing:.08em; color:var(--brown-mid);
+  line-height:1.9; margin-bottom:12px;
+}
+.svc-popup p + p { margin-top:4px; }
+.svc-popup-notice {
+  font-family:'Cinzel',serif;
+  font-size:10px; letter-spacing:.12em;
+  color:#c0392b;
+  line-height:1.6;
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(192,57,43,.2);
+}
+
+.hero-tagline-wrap {
+  text-align:center;
+  padding: 0 24px 40px;
+}
+.hero-tagline-text {
+  font-family:'Cinzel', serif;
+  font-size: clamp(13px, 1.6vw, 18px);
+  letter-spacing: 0.3em;
+  color: #1E1208;
+  font-weight: 400;
+}
+.cat-title-row {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:nowrap;
+}
+.cat-chevron {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px;
+  font-weight:300;
+  color:var(--gold);
+  line-height:1;
+  display:inline;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER BANNER -->
+<div class="header-banner">CONCEPT BAKERY WEBSITE</div>
+
+<!-- MOBILE DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <span class="drawer-title">Menu</span>
+    <button class="drawer-close" onclick="closeDrawer()">&#215;</button>
+  </div>
+  <nav class="drawer-nav">
+    <a href="index.html" class="active">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+  </nav>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-hamburger" onclick="openDrawer()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+  </div>
+  <div class="nav-cart">
+    <img src="assets/golden-croissant-v42-home-img1.png" alt="Shopping trolley" style="width:56px;height:56px;object-fit:contain;background:rgba(250,240,229,0.97);border-radius:50%;display:block;">
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img class="hero-title-img" src="assets/golden-croissant-v42-home-img2.png" alt="The Golden Croissant — Le Croissant Doré" id="heroTitleImg">
+  <div class="hero-tagline-wrap" id="heroTagline">
+    <p class="hero-tagline-text">PARISIAN BAKERY &amp; PÂTISSERIE &nbsp;•&nbsp; LONDON</p>
+  </div>
+
+  <div class="hero-img-wrap">
+    <img src="assets/golden-croissant-v42-home-img3.png" alt="Freshly baked steaming croissant">
+  </div>
+</section>
+
+<!-- COLLECTION & DELIVERY -->
+<!-- COLLECTION POPUP -->
+<div class="svc-overlay" id="popupCollection">
+  <div class="svc-popup">
+    <button class="svc-popup-close" onclick="closePopup('popupCollection')">&#215;</button>
+    <div class="svc-popup-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+    </div>
+    <h3>Collection</h3>
+    <div class="svc-popup-line"></div>
+    <p>Visit us at 12 Crescent d'Or, London.</p>
+    <p>Open Mon–Sat 7am–6pm.</p>
+    <p>Sunday 8am–2pm.</p>
+    <p class="svc-popup-notice">This is a concept site. The address and opening hours are fictional.</p>
+  </div>
+</div>
+
+<!-- DELIVERY POPUP -->
+<div class="svc-overlay" id="popupDelivery">
+  <div class="svc-popup">
+    <button class="svc-popup-close" onclick="closePopup('popupDelivery')">&#215;</button>
+    <div class="svc-popup-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+    </div>
+    <h3>Delivery</h3>
+    <div class="svc-popup-line"></div>
+    <p>Free delivery on orders over <span style="font-size:22px;color:var(--brown-deep);">£30</span>.</p>
+    <p>Next day delivery available.</p>
+    <p>Delivered fresh across London, daily.</p>
+    <p class="svc-popup-notice">This is a concept site. Delivery is not available.</p>
+  </div>
+</div>
+
+<section class="service-section">
+  <div class="service-cards">
+    <div class="service-card" onclick="openPopup('popupCollection')">
+      <img src="assets/golden-croissant-v42-home-img4.png" alt="Collection">
+    </div>
+    <div class="service-card" onclick="openPopup('popupDelivery')">
+      <img src="assets/golden-croissant-v42-home-img5.png" alt="Delivery">
+    </div>
+  </div>
+</section>
+
+<!-- SHOP BY CATEGORY -->
+<section class="cat-section">
+  <div class="sec-head"><h2>Shop By Category</h2></div>
+  <div class="cat-grid">
+
+    <a href="shop.html#pastries" style="text-decoration:none;">
+    <div class="cat-card">
+      <div class="cat-img"><img src="assets/golden-croissant-v42-home-img6.png" alt="Pain au Chocolat"></div>
+      <div class="cat-body">
+        <div class="cat-title-row"><h3>Pastries &amp; Tarts</h3><span class="cat-chevron">&gt;</span></div>
+      </div>
+    </div>
+    </a>
+
+    <a href="shop.html#bread" style="text-decoration:none;">
+    <div class="cat-card">
+      <div class="cat-img"><img src="assets/golden-croissant-v42-home-img7.png" alt="Artisan Bread"></div>
+      <div class="cat-body">
+        <div class="cat-title-row"><h3>Bread</h3><span class="cat-chevron">&gt;</span></div>
+      </div>
+    </div>
+    </a>
+
+    <a href="shop.html#cakes" style="text-decoration:none;">
+    <div class="cat-card">
+      <div class="cat-img"><img src="assets/golden-croissant-v42-home-img8.png" alt="French Apple Tart"></div>
+      <div class="cat-body">
+        <div class="cat-title-row"><h3>Cakes</h3><span class="cat-chevron">&gt;</span></div>
+      </div>
+    </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- OUR PACKAGING -->
+<section class="pkg-section">
+  <div class="sec-head"><h2>Our Packaging</h2></div>
+
+  
+
+  <!-- Packaging image -->
+  <div class="pkg-hero-wrap">
+    <img src="assets/golden-croissant-v42-home-img9.png" alt="The Golden Croissant packaging — bag and box">
+  </div>
+
+  <!-- Two icon cards -->
+  <div class="pkg-features">
+    <div class="pkg-feat">
+      <img src="assets/golden-croissant-v42-home-img10.png" alt="Premium Packaging">
+    </div>
+    <div class="pkg-feat">
+      <img src="assets/golden-croissant-v42-home-img11.png" alt="Recyclable Materials">
+    </div>
+  </div>
+
+</section>
+
+<!-- ABOUT THIS CONCEPT -->
+<section class="about-section">
+  <div class="sec-head"><h2>About This Concept</h2></div>
+  <div class="about-inner">
+    <p>The Golden Croissant is a fictional bakery concept created to showcase branding, packaging, website design, and AI-generated imagery.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-orn">
+      <span class="foot-line"></span>
+      <span class="foot-name">The Golden Croissant</span>
+      <span class="foot-line"></span>
+    </div>
+    <p class="foot-copy">2026 — This is a concept site.</p>
+  </div>
+</footer>
+
+<script>
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function openPopup(id) {
+  const overlay = document.getElementById(id);
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('visible')));
+}
+function closePopup(id) {
+  const overlay = document.getElementById(id);
+  overlay.classList.remove('visible');
+  setTimeout(() => {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }, 250);
+}
+// Close popup on overlay click
+document.querySelectorAll('.svc-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) closePopup(this.id);
+  });
+});
+</script>
+</body>
+</html>
